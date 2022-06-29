@@ -42,8 +42,6 @@ strategy:
     maxSurge: 1
     maxUnavailable: 1
 
-exportConfigToEnv: false
-
 podLabels: {}
 podAnnotations: {}
 
@@ -96,6 +94,7 @@ abacusRse:
 
 automatix:
   threads: 1
+  sleepTime: 30
   podAnnotations: {}
   resources:
     limits:

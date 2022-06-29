@@ -33,8 +33,6 @@ image:
   tag: release-1.27.0
   pullPolicy: Always
 
-exportConfigToEnv: false
-
 service:
   type: ClusterIP
   port: 80
@@ -101,6 +99,7 @@ monitoring:
   enabled: false
   exporterPort: 8080
   targetPort: 8080
+  nativeMetricsPort: 8081
   interval: 30s
   telemetryPath: /metrics
   namespace: monitoring
@@ -147,6 +146,7 @@ wsgi:
 httpd_config:
   mpm_mode: "event"
   enable_status: "True"
+  legacy_dn: "False"
   # keep_alive: "On"
   # keep_alive_timeout: "5"
   # max_keep_alive_requests: "128"
