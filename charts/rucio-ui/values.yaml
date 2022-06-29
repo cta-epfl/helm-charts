@@ -18,7 +18,7 @@ service:
 
 image:
   repository: rucio/rucio-ui
-  tag: release-1.21.12
+  tag: release-1.27.0
   pullPolicy: Always
 
 strategy:
@@ -44,7 +44,8 @@ ingress:
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
   path: /
-  hosts: []
+  hosts:
+  - rucio-ui.test-cta-cscs.odahub.io
   #   - my.rucio.test
 
 additionalSecrets: {}

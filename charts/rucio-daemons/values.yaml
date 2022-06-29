@@ -3,9 +3,9 @@
 # Declare variables to be passed into your templates.
 
 ## judgeCleanerCount gives the number of judge-cleaner pods to run
-abacusAccountCount: 0
-abacusCollectionReplicaCount: 0
-abacusRseCount: 0
+abacusAccountCount: 1
+abacusCollectionReplicaCount: 1
+abacusRseCount: 1
 automatixCount: 0
 cacheConsumerCount: 0
 conveyorTransferSubmitterCount: 0
@@ -18,10 +18,10 @@ conveyorPreparerCount: 0
 darkReaperCount: 0
 hermesCount: 0
 hermes2Count: 0
-judgeCleanerCount: 0
-judgeEvaluatorCount: 0
-judgeInjectorCount: 0
-judgeRepairerCount: 0
+judgeCleanerCount: 1
+judgeEvaluatorCount: 1
+judgeInjectorCount: 1
+judgeRepairerCount: 1
 oauthManagerCount: 0
 undertakerCount: 0
 reaperCount: 0
@@ -33,7 +33,7 @@ necromancerCount: 0
 
 image:
   repository: rucio/rucio-daemons
-  tag: release-1.18.0
+  tag: release-1.27.0
   pullPolicy: Always
 
 strategy:
@@ -175,6 +175,17 @@ conveyorThrottler:
       cpu: "700m"
 
 conveyorPreparer:
+  threads: 1
+  podAnnotations: {}
+  resources:
+    limits:
+      memory: "200Mi"
+      cpu: "700m"
+    requests:
+      memory: "200Mi"
+      cpu: "700m"
+
+conveyorStager:
   threads: 1
   podAnnotations: {}
   resources:

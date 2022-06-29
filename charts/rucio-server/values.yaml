@@ -3,9 +3,9 @@
 # Declare variables to be passed into your templates.
 
 ## replicaCount gives the number of server pods to run
-replicaCount: 0
+replicaCount: 1
 ## authReplicaCount gives the number of authentication server pods to run
-authReplicaCount: 0
+authReplicaCount: 1
 traceReplicaCount: 0
 
 # When set, run extra busybox containers in the relevant pods to also expose the error logs
@@ -30,7 +30,7 @@ useSSL:
 
 image:
   repository: rucio/rucio-server
-  tag: release-1.24.3
+  tag: release-1.27.0
   pullPolicy: Always
 
 exportConfigToEnv: false
@@ -160,16 +160,19 @@ httpd_config:
   # max_connections_per_child: "2048"
 
 ingress:
-  enabled: false
-  annotations: {}
+  enabled: true
+  annotations: #{}
+    cert-manager.io/cluster-issuer: letsencrypt-production
     # kubernetes.io/ingress.class: traefik
     # traefik.ingress.kubernetes.io/frontend-entry-points: http
     # traefik.ingress.kubernetes.io/redirect-entry-point: https
   path: /
-  hosts: []
+  hosts: 
+  - rucio.test-cta-cscs.odahub.io
   #   - my.rucio.test
-  tls:
-    - secretName: rucio-server.tls-secret
+  tls: #[]
+  #- hosts: rucio.test-cta-cscs.odahub.io
+  - secretName: rucio-server.tls-secret
   secrets:
   ## If you're providing your own certificates, please use this to add the certificates as secrets
   ## key and certificate should start with -----BEGIN CERTIFICATE----- or
@@ -189,16 +192,18 @@ ingress:
   #     -----END CERTIFICATE-----
 
 authIngress:
-  enabled: false
-  annotations: {}
+  enabled: true
+  annotations: #{}
+    cert-manager.io/cluster-issuer: letsencrypt-production
     # kubernetes.io/ingress.class: traefik
     # traefik.ingress.kubernetes.io/frontend-entry-points: http
     # traefik.ingress.kubernetes.io/redirect-entry-point: https
   path: /auth
-  hosts: []
+  hosts: #[]
+  - rucio-auth.test-cta-cscs.odahub.io
   #   - my.rucio.test
-  # tls:
-  #   - secretName: rucio-auth.tls-secret
+  tls:
+  - secretName: rucio-server-auth.tls-secret
   secrets:
   ## If you're providing your own certificates, please use this to add the certificates as secrets
   ## key and certificate should start with -----BEGIN CERTIFICATE----- or
@@ -226,8 +231,8 @@ traceIngress:
   path: /traces
   hosts: []
   #   - my.rucio.test
-  # tls:
-  #   - secretName: rucio-auth.tls-secret
+  tls:
+    - secretName: rucio-server-traces.tls-secret
   secrets:
   ## If you're providing your own certificates, please use this to add the certificates as secrets
   ## key and certificate should start with -----BEGIN CERTIFICATE----- or
