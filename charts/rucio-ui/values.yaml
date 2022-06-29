@@ -9,12 +9,22 @@ replicaCount: 1
 exposeErrorLogs: True
 
 service:
-  type: NodePort
+#  type: NodePort
   # Run the webui server on port 443 instead of 80 and accept X509 certificates and proxies
-  useSSL: true
-  port: 443
-  targetPort: https
-  portName: https
+   useSSL: true
+   port: 443
+   targetPort: https
+   portName: https
+
+# this does not actually work because of how apache is setup
+# service:
+#   type: ClusterIP
+#   # Run the webui server on port 443 instead of 80 and accept X509 certificates and proxies
+#   useSSL: false
+#   port: 80
+#   targetPort: http
+#   portName: http
+
 
 image:
   repository: rucio/rucio-ui
@@ -30,21 +40,27 @@ strategy:
 minReadySeconds: 5
 
 proxy:
-  rucioProxy: ""
+  rucioProxy: "rucio.test-cta-cscs.odahub.io"
   #rucioProxyScheme: "https"
-  rucioAuthProxy: ""
+  rucioAuthProxy: "rucio-auth.test-cta-cscs.odahub.io"
   #rucioAuthProxyScheme: "https"
   
 ingress:
   enabled: true
   annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS" # works but weird
+    #    kubernetes.io/ingress.class: nginx
+    # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    #nginx.ingress.kubernetes.io/ssl-redirect: "true"
   path: /
   hosts:
   - rucio-ui.test-cta-cscs.odahub.io
   #   - my.rucio.test
+  tls:
+  - secretName: rucio-ui.tls-secret
+
+  secrets:
 
 additionalSecrets: {}
 # gcssecret:
@@ -61,6 +77,8 @@ httpd_config: {}
   # threads_per_child: "5"
   # max_clients: "20"
   # max_requests_per_child: "8192"
+
+rucio_hostname: rucio-ui.test-cta-cscs.odahub.io
 
 ## values used to configure Rucio
 config:
