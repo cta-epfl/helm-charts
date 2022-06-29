@@ -58,7 +58,7 @@ ingress:
   - rucio-ui.test-cta-cscs.odahub.io
   #   - my.rucio.test
   tls:
-  - secretName: rucio-ui.tls-secret
+  - secretName: rucio-ui-cert.tls-secret
 
   secrets:
 
