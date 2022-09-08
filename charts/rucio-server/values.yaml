@@ -6,7 +6,7 @@
 replicaCount: 1
 ## authReplicaCount gives the number of authentication server pods to run
 authReplicaCount: 1
-traceReplicaCount: 0
+traceReplicaCount: 1
 
 # When set, run extra busybox containers in the relevant pods to also expose the error logs
 exposeErrorLogs:
@@ -96,7 +96,7 @@ logFormat:
   traceServer: '[%{%Y-%m-%d %H:%M:%S}t]\t%v\t%h\t%{X-Forwarded-For}i\t%{X-Rucio-RequestId}i\t%>s\t%I\t%B\t%D\t\"%r\"\t\"%{X-Rucio-Auth-Token}i\"\t\"%{User-Agent}i\"\t%{X-Rucio-Script}i'
 
 monitoring:
-  enabled: false
+  enabled: true
   exporterPort: 8080
   targetPort: 8080
   nativeMetricsPort: 8081
@@ -223,13 +223,15 @@ authIngress:
   #     -----END CERTIFICATE-----
 
 traceIngress:
-  enabled: false
-  annotations: {}
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
     # kubernetes.io/ingress.class: traefik
     # traefik.ingress.kubernetes.io/frontend-entry-points: http
     # traefik.ingress.kubernetes.io/redirect-entry-point: https
   path: /traces
-  hosts: []
+  hosts: #[]
+    - rucio-traces.test-cta-cscs.odahub.io
   #   - my.rucio.test
   tls:
     - secretName: rucio-server-traces.tls-secret
