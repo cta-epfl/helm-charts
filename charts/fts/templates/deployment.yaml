@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fts.fullname" . }}
+  labels:
+    {{- include "fts.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "fts.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "fts.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "fts.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - "ftsdb"
+
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: fts1
+              containerPort: 8446
+              protocol: TCP
+            - name: fts2
+              containerPort: 8449
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: fts1
+          readinessProbe:
+            httpGet:
+              path: /
+              port: fts1
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+        - name: ftsdb
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: mysql:5
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: mysql
+              containerPort: 3306
+              protocol: TCP
+          livenessProbe:
+            exec:
+              # command: ["mysqladmin", "ping"]
+              command: ["/bin/true"]
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command: ["/bin/true"]
+              # command: ["mysqladmin", "ping"]
+              # Check we can execute queries over TCP (skip-networking is off).
+              # command: ["mysql", "-h", "127.0.0.1", "-e", "SELECT 1", '-u', 'root', -p ]
+            initialDelaySeconds: 5
+            periodSeconds: 2
+            timeoutSeconds: 1
+          env:
+          - name: MYSQL_USER
+            value: fts
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: ftsdb
+                key: password
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: ftsdb
+                key: root-password                
+
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+
+
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
