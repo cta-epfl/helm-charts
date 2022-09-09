@@ -1,0 +1,19 @@
+apiVersion: skaffold/v2beta11
+kind: Config
+build:
+  artifacts:
+  - image: odahub/rucio-fts
+    context: ../containers/fts
+    docker:
+      dockerfile: "Dockerfile"
+deploy:
+  helm:
+    releases:
+    - name: fts
+      chartPath: charts/fts
+      valuesFiles:
+      - "charts/fts/values.yaml"
+      artifactOverrides:
+        image: odahub/rucio-fts
+      imageStrategy:
+        helm: {}
