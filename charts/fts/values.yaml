@@ -82,3 +82,5 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+proxy_serial_lowercase: "3f1695a0735443139c733e8d9154dcd2"

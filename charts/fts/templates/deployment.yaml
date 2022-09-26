@@ -39,7 +39,11 @@ spec:
       - name: fts3config
         configMap:
           name: fts3config
-
+          defaultMode: 0444
+      - name: x509up-u1000
+        secret:
+          secretName: x509up-u1000-{{ .Values.proxy_serial_lowercase }}
+          defaultMode: 0400
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -76,6 +80,16 @@ spec:
           - name: fts3config
             mountPath: /docker-entrypoint.sh
             subPath: docker-entrypoint.sh
+          - name: fts3config
+            mountPath: /etc/fts3/fts3restconfig
+            subPath: fts3restconfig
+          - name: fts3config
+            mountPath: /etc/httpd/conf.d/fts3rest.conf
+            subPath: fts3rest.conf            
+          - name: x509up-u1000
+            mountPath: /tmp/x509up_u0
+            subPath: x509up_u1000
+            readOnly: true
 
 
         - name: ftsdb
@@ -107,15 +121,16 @@ spec:
           - name: MYSQL_USER
             value: fts
           - name: MYSQL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: ftsdb
-                key: password
+            value: {{.Values.ftsdb_password}}
+            # valueFrom:
+            #   secretKeyRef:
+            #     name: ftsdb
+            #     key: password
           - name: MYSQL_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: ftsdb
-                key: root-password                
+                key: root-password                        
           - name: MYSQL_DATABASE
             value: fts
 

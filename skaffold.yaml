@@ -13,6 +13,8 @@ deploy:
       chartPath: charts/fts
       valuesFiles:
       - "charts/fts/values.yaml"
+      setValueTemplates:
+        ftsdb_password: "{{.FTS_DB_PASSWORD}}"
       artifactOverrides:
         image: odahub/rucio-fts
       imageStrategy:
