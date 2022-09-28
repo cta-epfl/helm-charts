@@ -6,7 +6,7 @@
 replicaCount: 1
 ## authReplicaCount gives the number of authentication server pods to run
 authReplicaCount: 1
-traceReplicaCount: 1
+traceReplicaCount: 0
 
 # When set, run extra busybox containers in the relevant pods to also expose the error logs
 exposeErrorLogs:
@@ -115,15 +115,17 @@ metricsExporterResources:
    memory: 20Mi
 
 ftsRenewal:
-  enabled: 0
+  enabled: 1
   schedule: "42 */6 * * *"
   image:
     repository: rucio/fts-cron
     tag: latest
     pullPolicy: Always
-  vo: "cms"
-  voms: "cms:/cms/Role=production"
-  servers: "https://fts3-devel.cern.ch:8446,https://cmsfts3.fnal.gov:8446,https://fts3.cern.ch:8446,https://lcgfts3.gridpp.rl.ac.uk:8446,https://fts3-pilot.cern.ch:8446"
+  longProxy: long.proxy
+  vo: "dteam"
+  voms: "dteam"
+  servers: "https://fts:8446"
+  # servers: "https://fts.test-cta-cscs.odahub.io:443"
 
 automaticRestart:
   enabled: 0
@@ -195,6 +197,9 @@ authIngress:
   enabled: true
   annotations: #{}
     cert-manager.io/cluster-issuer: letsencrypt-production
+    nginx.ingress.kubernetes.io/auth-tls-secret: "default/ca-secret"
+    nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream: "true"
+    nginx.ingress.kubernetes.io/auth-tls-verify-client: "optional_no_ca"
     # kubernetes.io/ingress.class: traefik
     # traefik.ingress.kubernetes.io/frontend-entry-points: http
     # traefik.ingress.kubernetes.io/redirect-entry-point: https
@@ -273,9 +278,9 @@ config:
     ## config.common.mailtemplatedir: directory containing the mail templates (default: "/opt/rucio/etc/mail_templates")
     # mailtemplatedir: "/opt/rucio/etc/mail_templates"
 
-  # database:
+  database:
     ## config.database.default: the connection string for the database (default: "sqlite:////tmp/rucio.db")
-    # default: "sqlite:////tmp/rucio.db"
+    default: "sqlite:////tmp/rucio.db"
     ## config.database.schema: the schema used in the DB. only necessary when using Oracle.
     # schema: ""
     ## config.database.pool_reset_on_return: set the “reset on return” behavior of the pool (default: "rollback")

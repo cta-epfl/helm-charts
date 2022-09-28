@@ -44,6 +44,14 @@ spec:
         secret:
           secretName: x509up-u1000-{{ .Values.proxy_serial_lowercase }}
           defaultMode: 0400
+      - name: fts-host-key
+        secret:
+          secretName: fts-host-cert
+          defaultMode: 0400
+      - name: fts-host-cert
+        secret:
+          secretName: fts-host-cert
+          defaultMode: 0444
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -90,7 +98,18 @@ spec:
             mountPath: /tmp/x509up_u0
             subPath: x509up_u1000
             readOnly: true
-
+          - name: fts-host-cert
+            mountPath: /etc/grid-security/hostcert.pem
+            subPath: hostcert.pem
+            readOnly: true
+          - name: fts-host-key
+            mountPath: /etc/grid-security/hostkey.pem
+            subPath: hostkey.pem
+            readOnly: true            
+          - name: fts-host-cert
+            mountPath: /etc/grid-security/certificates/cta-own-ca.crt
+            subPath: cta-own-ca.crt
+            readOnly: true            
 
         - name: ftsdb
           securityContext:
@@ -127,10 +146,11 @@ spec:
             #     name: ftsdb
             #     key: password
           - name: MYSQL_ROOT_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: ftsdb
-                key: root-password                        
+            value: {{.Values.ftsdb_root_password}}
+            # valueFrom:
+            #   secretKeyRef:
+            #     name: ftsdb
+            #     key: root-password                        
           - name: MYSQL_DATABASE
             value: fts
 

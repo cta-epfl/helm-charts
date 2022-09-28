@@ -80,6 +80,10 @@ spec:
         persistentVolumeClaim:
           claimName: {{ $val.name }}
       {{- end}}
+      # - name: x509up-u1000
+      #   secret:
+      #     secretName: x509up-u1000-{{ .Values.proxy_serial_lowercase }}
+      #     defaultMode: 0400
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -104,6 +108,11 @@ spec:
             - name: {{ $key }}
               mountPath: {{ $val.mountPath }}
             {{- end}}
+            # - name: x509up-u1000
+            #   # mountPath: /tmp/x509up_u0
+            #   mountPath: /x509up_u0
+            #   subPath: x509up_u1000
+            #   readOnly: true
           ports:
             - name: metrics
               containerPort: 8080

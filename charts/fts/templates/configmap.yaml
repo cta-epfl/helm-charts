@@ -107,8 +107,15 @@ data:
   docker-entrypoint.sh: |-
     #!/bin/bash
 
+    set -x
+
     # wait for MySQL readiness
     /usr/local/bin/wait-for-it.sh -h ftsdb -p 3306 -t 3600
+
+    ls -l /etc/grid-security/    
+    ls -lort /etc/grid-security/certificates | tail -5
+
+    c_rehash /etc/grid-security/certificates
 
     # initialise / upgrade the database
     mysql -h ftsdb -u fts --password={{.Values.ftsdb_password}} fts < $(ls /usr/share/fts-mysql/fts-schema* | sort -t '-' -k '4n' | tail -n 1)
@@ -125,6 +132,9 @@ data:
     /usr/sbin/fts_msg_bulk             # daemon to send messages to activemq
     /usr/sbin/fts_bringonline          # daemon to handle staging requests
     /usr/sbin/httpd -DFOREGROUND       # FTS REST frontend & FTSMON
+
+    find /var/log/ | xargs tail -n 40
+
 
 
 

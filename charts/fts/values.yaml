@@ -39,24 +39,30 @@ securityContext: {}
 
 service:
   type: ClusterIP
+  port: 8446
   port1: 8446
   port2: 8449
 
 ingress:
-  enabled: false
+  enabled: true
   className: ""
-  annotations: {}
+  annotations: #{}
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    nginx.ingress.kubernetes.io/auth-tls-secret: "default/ca-secret"
+    nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream: "true"
+    nginx.ingress.kubernetes.io/auth-tls-verify-client: "optional"
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: chart-example.local
+    - host: fts.test-cta-cscs.odahub.io
       paths:
         - path: /
           pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls: #[]
+   - secretName: fts-tls
+     hosts:
+       - fts.test-cta-cscs.odahub.io
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -83,4 +89,4 @@ tolerations: []
 
 affinity: {}
 
-proxy_serial_lowercase: "3f1695a0735443139c733e8d9154dcd2"
+proxy_serial_lowercase: "27d327ff23f24ed092fb49da2c2f3889"

@@ -6,6 +6,28 @@ build:
     context: ../containers/fts
     docker:
       dockerfile: "Dockerfile"
+
+  - image: odahub/rucio-fts-cron
+    context: ../containers/fts-cron
+    docker:
+      dockerfile: "Dockerfile_cpp"
+
+  - image: odahub/rucio-server
+    context: ../containers/server
+    docker:
+      dockerfile: "Dockerfile"
+      buildArgs:
+        # TAG: 1.29.5 #TODO: set from somewhere
+        TAG: 1.28.4
+
+  - image: odahub/rucio-daemons
+    context: ../containers/daemons
+    docker:
+      dockerfile: "Dockerfile"
+      buildArgs:
+        # TAG: 1.29.5 #TODO: set from somewhere
+        TAG: 1.28.4
+
 deploy:
   helm:
     releases:
@@ -15,7 +37,36 @@ deploy:
       - "charts/fts/values.yaml"
       setValueTemplates:
         ftsdb_password: "{{.FTS_DB_PASSWORD}}"
+        ftsdb_root_password:  "{{.FTS_DB_ROOT_PASSWORD}}"
       artifactOverrides:
         image: odahub/rucio-fts
       imageStrategy:
         helm: {}
+
+    - name: rucio
+      chartPath: charts/rucio-server
+      setValueTemplates:
+        config:
+          database:
+            default: "postgresql://postgres:{{.RUCIO_POSTGRES}}@database-postgresql:5432/rucio" 
+      valuesFiles:
+      - "charts/rucio-server/values.yaml"
+      artifactOverrides:
+        image: odahub/rucio-server
+        ftsRenewal.image: odahub/rucio-fts-cron
+      imageStrategy:
+        helm: {}    
+
+
+    - name: rucio-daemons
+      chartPath: charts/rucio-daemons
+      setValueTemplates:
+        config:
+          database:
+            default: "postgresql://postgres:{{.RUCIO_POSTGRES}}@database-postgresql:5432/rucio" 
+      valuesFiles:
+      - "charts/rucio-daemons/values.yaml"
+      artifactOverrides:
+        image: odahub/rucio-daemons
+      imageStrategy:
+        helm: {}    

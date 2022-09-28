@@ -8,20 +8,20 @@ abacusCollectionReplicaCount: 1
 abacusRseCount: 1
 automatixCount: 0
 cacheConsumerCount: 0
-conveyorTransferSubmitterCount: 0
-conveyorPollerCount: 0
-conveyorFinisherCount: 0
-conveyorReceiverCount: 0
+conveyorTransferSubmitterCount: 1
+conveyorPollerCount: 1
+conveyorFinisherCount: 1
+conveyorReceiverCount: 1
 conveyorStagerCount: 0
 conveyorThrottlerCount: 0
 conveyorPreparerCount: 0
 darkReaperCount: 0
 hermesCount: 0
 hermes2Count: 0
-judgeCleanerCount: 1
-judgeEvaluatorCount: 1
-judgeInjectorCount: 1
-judgeRepairerCount: 1
+judgeCleanerCount: 0
+judgeEvaluatorCount: 0
+judgeInjectorCount: 0
+judgeRepairerCount: 0
 oauthManagerCount: 0
 undertakerCount: 0
 reaperCount: 0
@@ -67,7 +67,7 @@ abacusAccount:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 abacusCollectionReplica:
   threads: 1
@@ -78,7 +78,7 @@ abacusCollectionReplica:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 abacusRse:
   fillHistoryTable: 0
@@ -90,7 +90,7 @@ abacusRse:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 automatix:
   threads: 1
@@ -118,7 +118,7 @@ cacheConsumer:
 conveyorTransferSubmitter:
   threads: 1
   podAnnotations: {}
-  activities: "'test1' 'test2'"
+  activities: "'User Subscriptions'"
   sleepTime: 10
   archiveTimeout: ""
   resources:
@@ -127,29 +127,33 @@ conveyorTransferSubmitter:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 conveyorPoller:
   threads: 1
   podAnnotations: {}
+  activities: "'User Subscriptions'"
+  sleepTime: 10
   resources:
     limits:
       memory: "200Mi"
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 conveyorFinisher:
   threads: 1
   podAnnotations: {}
+  activities: "'User Subscriptions'"
+  sleepTime: 10
   resources:
     limits:
       memory: "200Mi"
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 conveyorReceiver:
   threads: 1
@@ -160,7 +164,7 @@ conveyorReceiver:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 conveyorThrottler:
   threads: 1
@@ -171,7 +175,7 @@ conveyorThrottler:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 conveyorPreparer:
   threads: 1
@@ -182,7 +186,7 @@ conveyorPreparer:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 conveyorStager:
   threads: 1
@@ -193,7 +197,7 @@ conveyorStager:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 darkReaper:
   workers: 1
@@ -209,7 +213,7 @@ darkReaper:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 hermes:
   threads: 1
@@ -223,7 +227,7 @@ hermes:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 hermes2:
   threads: 1
@@ -235,7 +239,7 @@ hermes2:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 judgeCleaner:
   threads: 1
@@ -246,7 +250,7 @@ judgeCleaner:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 judgeEvaluator:
   threads: 1
@@ -257,7 +261,7 @@ judgeEvaluator:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 judgeInjector:
   threads: 1
@@ -268,7 +272,7 @@ judgeInjector:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 judgeRepairer:
   threads: 1
@@ -279,7 +283,7 @@ judgeRepairer:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 oauthManager:
   threads: 1
@@ -290,7 +294,7 @@ oauthManager:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 undertaker:
   threads: 1
@@ -301,7 +305,7 @@ undertaker:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 reaper:
   greedy: 0
@@ -315,7 +319,7 @@ reaper:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 transmogrifier:
   threads: 1
@@ -326,7 +330,7 @@ transmogrifier:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 tracerKronos:
   threads: 1
@@ -337,7 +341,7 @@ tracerKronos:
       cpu: "700m"
     requests:
       memory: "200Mi"
-      cpu: "700m"
+      cpu: "100m"
 
 minos:
   threads: 1
@@ -372,15 +376,17 @@ necromancer:
       cpu: "100m"
 
 ftsRenewal:
-  enabled: 0
+  enabled: 1
   schedule: "12 */6 * * *"
   image:
     repository: rucio/fts-cron
     tag: latest
     pullPolicy: Always
-  vo: "cms"
-  voms: "cms:/cms/Role=production"
-  servers: "https://fts3-devel.cern.ch:8446,https://cmsfts3.fnal.gov:8446,https://fts3.cern.ch:8446,https://lcgfts3.gridpp.rl.ac.uk:8446,https://fts3-pilot.cern.ch:8446"
+  longProxy: long.proxy
+  vo: "dteam"
+  voms: "dteam"
+  # servers: "https://fts.test-cta-cscs.odahub.io:443"
+  servers: "https://fts:8446"
 
 automaticRestart:
   enabled: 0
@@ -401,11 +407,11 @@ config:
   # accounts:
     # special_accounts: "panda, tier0"
 
-  # common:
+  common:
     ## config.common.logdir: the default directoy to write logs to (default: "/var/log/rucio")
     # logdir: "/var/log/rucio"
     ## config.common.logdir: the max loglevel (default: "DEBUG")
-    # loglevel: "DEBUG"
+    loglevel: "DEBUG"
     ## config.common.mailtemplatedir: directory containing the mail templates (default: "/opt/rucio/etc/mail_templates")
     # mailtemplatedir: "/opt/rucio/etc/mail_templates"
 
@@ -462,7 +468,7 @@ config:
     # transfertool: "fts3"
     # ftshosts: "https://fts3-pilot.cern.ch:8446, https://fts3-pilot.cern.ch:8446"
     cacert: "/opt/certs/CERN-bundle.pem"
-    usercert: "/opt/proxy/x509up"
+    usercert: "/opt/proxy/x509up"    
     # cache_time: ""
     # user_deterministic_id: ""
     # poll_timeout: ""
@@ -530,3 +536,5 @@ config:
     # gcs: "/opt/rucio/etc/google-cloud-storage-test.json"
     # signature_lifetime: "3600"
 
+
+proxy_serial_lowercase: 
